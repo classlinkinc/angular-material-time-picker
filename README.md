@@ -19,13 +19,13 @@ The "time input field" is made up of three individual text inputs for hour, minu
 
 12 hour | 24 hour
 --------|--------
-![12 Hour](/img/time-picker-12.png?raw=true "time-picker-12.PNG") | ![24 hour](/img/time-picker-24.png?raw=true "time-picker-24.PNG")
+![12 Hour](/img/time-picker-12.PNG?raw=true) | ![24 hour](/img/time-picker-24.PNG?raw=true)
 
 #### Modal
 
 12 Hour | 24 Hour | Minute
 --------|---------|--------
-![12Hour](/img/modal-hour-12.png?raw=true "modal-hour-12.PNG") | ![24 hour](/img/modal-hour-24.png?raw=true "modal-hour-24.PNG") | ![Minute](/img/modal-minute.png?raw=true "modal-minute.PNG")
+![12Hour](/img/modal-hour-12.PNG?raw=true) | ![24 hour](/img/modal-hour-24.PNG?raw=true) | ![Minute](/img/modal-minute.PNG?raw=true)
 
 ## Demo
 
