@@ -1,6 +1,6 @@
 /*
  * Angular Material Time Picker
- * https://github.com/mattbajorek/md-time-picker
+ * https://github.com/classlinkinc/angular-material-time-picker
  * @license MIT
  * v0.0.1
  */
@@ -245,7 +245,7 @@
           '<div ng-message="required">{{message}}</div>' +
           '</div>' +
           '</md-input-container>',
-        controller: function($scope) {
+        controller: ["$scope", function($scope) {
 
           if ($scope.type === "HH") {
             if ($scope.$parent.noMeridiem) {
@@ -308,7 +308,7 @@
             else if (ev.keyCode === 40) $scope.decrease();
           }
 
-        }
+        }]
       }
 
     })
@@ -336,7 +336,7 @@
           '<div ng-message="required">{{message}}</div>' +
           '</div>' +
           '</md-input-container>',
-        controller: function($scope) {
+        controller: ["$scope", function($scope) {
 
           function setMeridiem() {
             var hours = $scope.$parent.$parent.ngModel.getHours();
@@ -354,7 +354,7 @@
           var removeListener = $scope.$on('mdpTimeUpdated', setMeridiem);
           $scope.$on('$destroy', removeListener);
 
-        }
+        }]
 
       }
 
@@ -381,7 +381,7 @@
           '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}"></md-hours-minutes>' +
           '<md-meridiem ng-if="!noMeridiem" message="{{message.meridiem}}"></md-meridiem>' +
           '</form>',
-        controller: function($scope, $mdpTimePicker, $attrs) {
+        controller: ["$scope", "$mdpTimePicker", "$attrs", function($scope, $mdpTimePicker, $attrs) {
 
           if (!angular.isDate($scope.ngModel))
             throw "ng-model must be initialized as a date object";
@@ -397,7 +397,8 @@
             });
 
           }
-        },
+
+        }],
         compile: function(tElement, tAttrs) {
           return {
             pre: function preLink(scope) {
