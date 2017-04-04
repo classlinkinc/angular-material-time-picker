@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demoApp">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Material Design Time Picker</title>
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="app.css" rel="stylesheet" type="text/css"/>
+    <link href="../dist/md-time-picker.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body ng-controller="demoAppController">
+
+    <md-toolbar class="md-whiteframe-1dp">
+      <div class="md-toolbar-tools">
+        <div class="md-title">Material Design Time Picker</div>
+      </div>
+    </md-toolbar>
+
+    <md-content layout="row" flex style="overflow: visible">
+
+      <md-card flex layout="column" layout-align="center center">
+        <span class="md-headline">12 Hour Time</span>
+        <md-time-picker ng-model="time.twelve" message="message"></md-time-picker>
+        {{'Hours: ' + time.twelve.getHours()}}<br>
+        {{'Minutes: ' + time.twelve.getMinutes()}}
+      </md-card>
+
+      <md-card flex layout="column" layout-align="center center">
+        <span class="md-headline">24 Hour Time</span>
+        <md-time-picker ng-model="time.twentyfour" message="message" no-meridiem no-auto-switch></md-time-picker>
+        {{'Hours: ' + time.twentyfour.getHours()}}<br>
+        {{'Minutes: ' + time.twentyfour.getMinutes()}}
+      </md-card>
+
+    </md-content>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+
+    <script type="text/javascript" src="demoApp.js"></script>
+    <script type="text/javascript" src="../dist/md-time-picker.js"></script>
+
+  </body>
+</html>
