@@ -111,10 +111,18 @@
           $scope.$on('$destroy', removeListener);
 
           function updateTime(next) {
-            if ($scope.type === 'HH')
-              $scope.ngModel.setHours(next);
-            else
+            console.log($scope.ngModel.getHours())
+            if ($scope.type === 'MM') {
               $scope.ngModel.setMinutes(next);
+              return;
+            } else if (!$scope.$parent.noMeridiem) {
+              var hours = $scope.ngModel.getHours();
+              if (hours >= 12 && next != 12)
+                next += 12;
+              else if (hours < 12 && next == 12)
+                next = 0;
+            }
+            $scope.ngModel.setHours(next);
           }
 
           $scope.increase = function() {
@@ -223,7 +231,8 @@
               noMeridiem: $scope.noMeridiem,
               autoSwitch: !$scope.noAutoSwitch
             }).then(function(time) {
-              $scope.ngModel = new Date(time.getTime());
+              $scope.ngModel.setHours(time.getHours());
+              $scope.ngModel.setMinutes(time.getMinutes());
               $scope.$broadcast('mdpTimeUpdated');
             });
 

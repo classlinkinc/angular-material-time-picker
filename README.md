@@ -39,29 +39,6 @@ A live [Codepen demo](http://codepen.io/mattbajorek/pen/OpGVyv).  The same html/
 
 ## Installation
 
-#### Using Bower
-
-This package is installable through the Bower package manager.
-
-```
-bower install angular-material-time-picker --save
-```
-
-In your `index.html` file, include the data table module and style sheet.
-
-```html
-<!-- style sheet -->
-<link href="bower_components/angular-material-time-picker/dist/md-time-picker.min.css" rel="stylesheet" type="text/css"/>
-<!-- module -->
-<script type="text/javascript" src="bower_components/angular-material-time-picker/dist/md-time-picker.min.js"></script>
-```
-
-Include the `md.time.picker` module as a dependency in your application.
-
-```javascript
-angular.module('myApp', ['ngMaterial', 'md.time.picker']);
-```
-
 #### Using npm
 
 In addition, this package may be installed using npm.
