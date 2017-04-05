@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/classlinkinc/angular-material-time-picker/issues"
   },
-  "homepage": "https://github.com/classlinkinc/angular-material-time-picker#readme"
+  "homepage": "https://github.com/classlinkinc/angular-material-time-picker#readme",
+  "peerDependencies": {
+    "angular": "^1.5.0",
+    "angular-material": "^1.0.0"
+  }
 }
