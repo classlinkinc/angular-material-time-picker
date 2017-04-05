@@ -41,17 +41,23 @@ A live [Codepen demo](http://codepen.io/mattbajorek/pen/OpGVyv).  The same html/
 
 #### Using npm
 
-In addition, this package may be installed using npm.
-
 ```
 npm install angular-material-time-picker --save
 ```
 
-You may use Browserify to inject this module into your application.
+You may use Webpack to inject this module into your application.
 
+##ES5
 ```javascript
 require('angular-material-time-picker/dist/md-time-picker.css');
 var ngTimePicker = require('angular-material-time-picker');
+angular.module('myApp', [ngTimePicker]);
+```
+
+##ES6
+```javascript
+import 'angular-material-time-picker/dist/md-time-picker.css';
+import ngTimePicker from 'angular-material-time-picker';
 angular.module('myApp', [ngTimePicker]);
 ```
 
