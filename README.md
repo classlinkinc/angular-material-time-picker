@@ -47,14 +47,14 @@ npm install angular-material-time-picker --save
 
 You may use Webpack to inject this module into your application.
 
-##ES5
+#### ES5
 ```javascript
 require('angular-material-time-picker/dist/md-time-picker.css');
 var ngTimePicker = require('angular-material-time-picker');
 angular.module('myApp', [ngTimePicker]);
 ```
 
-##ES6
+#### ES6
 ```javascript
 import 'angular-material-time-picker/dist/md-time-picker.css';
 import ngTimePicker from 'angular-material-time-picker';
