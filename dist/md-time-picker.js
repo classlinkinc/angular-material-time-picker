@@ -47,176 +47,6 @@
     }
   }
 
-  function TimePickerCtrl($scope, $mdDialog, time, noMeridiem, autoSwitch, $mdMedia) {
-    var self = this;
-
-    this.time = new Date(time.getTime());
-    this.noMeridiem = noMeridiem;
-    if (!noMeridiem)
-      this.meridiem = time.getHours() < 12 ? 'AM' : 'PM';
-
-    this.VIEW_HOURS = 1;
-    this.VIEW_MINUTES = 2;
-    this.currentView = this.VIEW_HOURS;
-    this.autoSwitch = !!autoSwitch;
-
-    $scope.$mdMedia = $mdMedia;
-
-    this.switchView = function() {
-      self.currentView = self.currentView == self.VIEW_HOURS ? self.VIEW_MINUTES : self.VIEW_HOURS;
-    };
-
-    this.hours = function() {
-      var hours = self.time.getHours();
-      if (noMeridiem) return hours;
-      if (hours > 12) return hours-12;
-      else if (hours === 0) return 12;
-      return hours;
-    }
-
-    this.minutes = function() {
-      return format(self.time.getMinutes());
-    }
-
-    this.setAM = function() {
-      var hours = self.time.getHours();
-      if (hours >= 12) {
-        self.time.setHours(hours - 12);
-        self.meridiem = 'AM';
-      }
-    };
-
-    this.setPM = function() {
-      var hours = self.time.getHours();
-      if (hours < 12) {
-        self.time.setHours(hours + 12);
-        self.meridiem = 'PM';
-      }
-    };
-
-    this.cancel = function() {
-      $mdDialog.cancel();
-    };
-
-    this.confirm = function() {
-      $mdDialog.hide(this.time);
-    };
-  }
-
-  function ClockCtrl($scope) {
-    var TYPE_HOURS = "hours";
-    var TYPE_MINUTES = "minutes";
-    var self = this;
-
-    this.noMeridiem = $scope.$parent.timepicker.noMeridiem;
-
-    this.STEP_DEG = this.noMeridiem ? 360/24 : 360/12;
-    this.STEP_DEG_MINUTES = 360/12;
-    this.steps = [];
-
-    this.CLOCK_TYPES = {
-      "hours": {
-        range: this.noMeridiem ? 24 : 12,
-      },
-      "minutes": {
-        range: 60,
-      }
-    }
-
-    this.getPointerStyle = function() {
-      var divider = 1;
-      switch (self.type) {
-        case TYPE_HOURS:
-          divider = self.noMeridiem ? 24 : 12;
-          break;
-        case TYPE_MINUTES:
-          divider = 60;
-          break;
-      }
-      var degrees = Math.round(self.selected * (360 / divider)) - 180;
-      return {
-        "-webkit-transform": "rotate(" + degrees + "deg)",
-        "-ms-transform": "rotate(" + degrees + "deg)",
-        "transform": "rotate(" + degrees + "deg)"
-      }
-    };
-
-    this.setTimeByDeg = function(deg) {
-
-      var divider = 0;
-      switch (self.type) {
-        case TYPE_HOURS:
-          divider = self.noMeridiem ? 24 : 12;
-          break;
-        case TYPE_MINUTES:
-          divider = 60;
-          break;
-      }
-
-      var time = Math.round(divider / 360 * deg);
-      if (!self.noMeridiem && self.type === "hours" && time === 0)
-        time = 12;
-      else if (self.type === "minutes" && time === 60)
-        time = 0;
-      self.setTime(time);
-    };
-
-    this.setTime = function(time) {
-
-      this.selected = time;
-
-      switch (self.type) {
-        case TYPE_HOURS:
-          if (!self.noMeridiem) {
-            var PM = this.time.getHours() >= 12 ? true : false;
-            if (PM && time != 12)
-              time += 12;
-            else if (!PM && time === 12)
-              time = 0;
-          }
-          this.time.setHours(time);
-          break;
-        case TYPE_MINUTES:
-          this.time.setMinutes(time);
-          break;
-      }
-
-    };
-
-    this.init = function() {
-
-      self.type = self.type || "hours";
-
-      switch (self.type) {
-        case TYPE_HOURS:
-          if (self.noMeridiem) {
-            for (var i = 1; i <= 23; i++)
-              self.steps.push(i);
-            self.steps.push(0);
-            self.selected = self.time.getHours() || 0;
-          }
-          else {
-            for (var i = 1; i <= 12; i++)
-              self.steps.push(i);
-              self.selected = self.time.getHours() || 0;
-              if (self.selected > 12) self.selected -= 12;
-          }
-
-          break;
-        case TYPE_MINUTES:
-          for (var i = 5; i <= 55; i += 5)
-            self.steps.push(i);
-          self.steps.push(0);
-
-          self.selected = self.time.getMinutes() || 0;
-
-          break;
-      }
-    };
-
-    this.init();
-  }
-
   angular.module('md.time.picker', ['ngMessages'])
 
     .directive('mdHoursMinutes', function() {
@@ -388,8 +218,9 @@
 
           $scope.showPicker = function(ev) {
 
-            $mdpTimePicker($scope.ngModel, $scope.noMeridiem, {
+            $mdpTimePicker($scope.ngModel, {
               targetEvent: ev,
+              noMeridiem: $scope.noMeridiem,
               autoSwitch: !$scope.noAutoSwitch
             }).then(function(time) {
               $scope.ngModel = new Date(time.getTime());
@@ -425,10 +256,64 @@
       };
 
       this.$get = ["$mdDialog", function($mdDialog) {
-        var timePicker = function(time, noMeridiem, options) {
+        var timePicker = function(time, options) {
 
           return $mdDialog.show({
-            controller: ['$scope', '$mdDialog', 'time', 'noMeridiem', 'autoSwitch', '$mdMedia', TimePickerCtrl],
+            controller: ['$scope', '$mdDialog', '$mdMedia', function ($scope, $mdDialog, $mdMedia) {
+              var self = this;
+
+              this.time = new Date(time.getTime());
+              this.noMeridiem = options.noMeridiem;
+              if (!self.noMeridiem)
+                this.meridiem = time.getHours() < 12 ? 'AM' : 'PM';
+
+              this.VIEW_HOURS = 1;
+              this.VIEW_MINUTES = 2;
+              this.currentView = this.VIEW_HOURS;
+              this.autoSwitch = !!options.autoSwitch;
+
+              $scope.$mdMedia = $mdMedia;
+
+              this.switchView = function() {
+                self.currentView = self.currentView == self.VIEW_HOURS ? self.VIEW_MINUTES : self.VIEW_HOURS;
+              };
+
+              this.hours = function() {
+                var hours = self.time.getHours();
+                if (self.noMeridiem) return hours;
+                if (hours > 12) return hours-12;
+                else if (hours === 0) return 12;
+                return hours;
+              }
+
+              this.minutes = function() {
+                return format(self.time.getMinutes());
+              }
+
+              this.setAM = function() {
+                var hours = self.time.getHours();
+                if (hours >= 12) {
+                  self.time.setHours(hours - 12);
+                  self.meridiem = 'AM';
+                }
+              };
+
+              this.setPM = function() {
+                var hours = self.time.getHours();
+                if (hours < 12) {
+                  self.time.setHours(hours + 12);
+                  self.meridiem = 'PM';
+                }
+              };
+
+              this.cancel = function() {
+                $mdDialog.cancel();
+              };
+
+              this.confirm = function() {
+                $mdDialog.hide(this.time);
+              };
+            }],
             controllerAs: 'timepicker',
             clickOutsideToClose: true,
             template: '<md-dialog aria-label="" class="mdp-timepicker" ng-class="{ \'portrait\': !$mdMedia(\'gt-xs\') }">' +
@@ -460,7 +345,7 @@
             targetEvent: options.targetEvent,
             locals: {
               time: time,
-              noMeridiem: noMeridiem,
+              noMeridiem: options.noMeridiem,
               autoSwitch: options.autoSwitch
             },
             skipHide: true
@@ -490,7 +375,119 @@
           '<md-button ng-if="clock.type !== \'minutes\'" ng-class="{ \'md-primary\': clock.selected == step }" class="md-icon-button md-raised mdp-clock-deg{{ ::(clock.STEP_DEG * ($index + 1)) }}" ng-repeat="step in clock.steps">{{ step }}</md-button>' +
           '</div>' +
           '</div>',
-        controller: ["$scope", ClockCtrl],
+        controller: ["$scope", function ($scope) {
+          var TYPE_HOURS = "hours";
+          var TYPE_MINUTES = "minutes";
+          var self = this;
+
+          this.noMeridiem = $scope.$parent.timepicker.noMeridiem;
+
+          this.STEP_DEG = this.noMeridiem ? 360/24 : 360/12;
+          this.STEP_DEG_MINUTES = 360/12;
+          this.steps = [];
+
+          this.CLOCK_TYPES = {
+            "hours": {
+              range: this.noMeridiem ? 24 : 12,
+            },
+            "minutes": {
+              range: 60,
+            }
+          }
+
+          this.getPointerStyle = function() {
+            var divider = 1;
+            switch (self.type) {
+              case TYPE_HOURS:
+                divider = self.noMeridiem ? 24 : 12;
+                break;
+              case TYPE_MINUTES:
+                divider = 60;
+                break;
+            }
+            var degrees = Math.round(self.selected * (360 / divider)) - 180;
+            return {
+              "-webkit-transform": "rotate(" + degrees + "deg)",
+              "-ms-transform": "rotate(" + degrees + "deg)",
+              "transform": "rotate(" + degrees + "deg)"
+            }
+          };
+
+          this.setTimeByDeg = function(deg) {
+
+            var divider = 0;
+            switch (self.type) {
+              case TYPE_HOURS:
+                divider = self.noMeridiem ? 24 : 12;
+                break;
+              case TYPE_MINUTES:
+                divider = 60;
+                break;
+            }
+
+            var time = Math.round(divider / 360 * deg);
+            if (!self.noMeridiem && self.type === "hours" && time === 0)
+              time = 12;
+            else if (self.type === "minutes" && time === 60)
+              time = 0;
+            self.setTime(time);
+          };
+
+          this.setTime = function(time) {
+
+            this.selected = time;
+
+            switch (self.type) {
+              case TYPE_HOURS:
+                if (!self.noMeridiem) {
+                  var PM = this.time.getHours() >= 12 ? true : false;
+                  if (PM && time != 12)
+                    time += 12;
+                  else if (!PM && time === 12)
+                    time = 0;
+                }
+                this.time.setHours(time);
+                break;
+              case TYPE_MINUTES:
+                this.time.setMinutes(time);
+                break;
+            }
+
+          };
+
+          this.init = function() {
+
+            self.type = self.type || "hours";
+
+            switch (self.type) {
+              case TYPE_HOURS:
+                if (self.noMeridiem) {
+                  for (var i = 1; i <= 23; i++)
+                    self.steps.push(i);
+                  self.steps.push(0);
+                  self.selected = self.time.getHours() || 0;
+                }
+                else {
+                  for (var i = 1; i <= 12; i++)
+                    self.steps.push(i);
+                    self.selected = self.time.getHours() || 0;
+                    if (self.selected > 12) self.selected -= 12;
+                }
+
+                break;
+              case TYPE_MINUTES:
+                for (var i = 5; i <= 55; i += 5)
+                  self.steps.push(i);
+                self.steps.push(0);
+
+                self.selected = self.time.getMinutes() || 0;
+
+                break;
+            }
+          };
+
+          this.init();
+        }],
         controllerAs: "clock",
         link: function(scope, element, attrs, ctrl) {
           var pointer = angular.element(element[0].querySelector(".mdp-pointer")),
