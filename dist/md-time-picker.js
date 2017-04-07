@@ -2,7 +2,7 @@
  * Angular Material Time Picker
  * https://github.com/classlinkinc/angular-material-time-picker
  * @license MIT
- * v0.0.1
+ * v1.0.1
  */
 (function(window, angular, undefined) {
   'use strict';
@@ -75,7 +75,7 @@
           '<div ng-message="required">{{message}}</div>' +
           '</div>' +
           '</md-input-container>',
-        controller: ["$scope", function($scope) {
+        controller: ["$scope", "$rootScope", function($scope, $rootScope) {
 
           if ($scope.type === "HH") {
             if ($scope.$parent.noMeridiem) {
@@ -107,11 +107,10 @@
           $scope.time = {};
           setTime();
 
-          var removeListener = $scope.$on('mdpTimeUpdated', setTime);
+          var removeListener = $scope.$on('mdpTimePickerModalUpdated', setTime);
           $scope.$on('$destroy', removeListener);
 
           function updateTime(next) {
-            console.log($scope.ngModel.getHours())
             if ($scope.type === 'MM') {
               $scope.ngModel.setMinutes(next);
               return;
@@ -129,16 +128,19 @@
             var next = increase($scope.time[$scope.type], $scope.min, $scope.max, $scope.type)
             $scope.time[$scope.type] = next;
             updateTime(parseInt(next));
+            $rootScope.$emit('mdpTimePickerUpdated');
           }
 
           $scope.decrease = function() {
             var next = decrease($scope.time[$scope.type], $scope.min, $scope.max, $scope.type);
             $scope.time[$scope.type] = next;
             updateTime(parseInt(next));
+            $rootScope.$emit('mdpTimePickerUpdated');
           }
 
           $scope.handleInput = function(blur) {
             $scope.time[$scope.type] = handleInput($scope.time[$scope.type], $scope.max, blur, $scope.type);
+            $rootScope.$emit('mdpTimePickerUpdated');
           }
 
           $scope.handleKeypress = function(ev) {
@@ -174,7 +176,7 @@
           '<div ng-message="required">{{message}}</div>' +
           '</div>' +
           '</md-input-container>',
-        controller: ["$scope", function($scope) {
+        controller: ["$scope", "$rootScope", function($scope, $rootScope) {
 
           function setMeridiem() {
             var hours = $scope.$parent.$parent.ngModel.getHours();
@@ -187,9 +189,10 @@
             var hours = $scope.$parent.$parent.ngModel.getHours();
             if ($scope.meridiem === 'AM') $scope.$parent.$parent.ngModel.setHours(hours-12);
             else $scope.$parent.$parent.ngModel.setHours(hours+12);
+            $rootScope.$emit('mdpTimePickerUpdated');
           }
 
-          var removeListener = $scope.$on('mdpTimeUpdated', setMeridiem);
+          var removeListener = $scope.$on('mdpTimePickerModalUpdated', setMeridiem);
           $scope.$on('$destroy', removeListener);
 
         }]
@@ -219,7 +222,7 @@
           '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}"></md-hours-minutes>' +
           '<md-meridiem ng-if="!noMeridiem" message="{{message.meridiem}}"></md-meridiem>' +
           '</form>',
-        controller: ["$scope", "$mdpTimePicker", "$attrs", function($scope, $mdpTimePicker, $attrs) {
+        controller: ["$scope", "$rootScope", "$mdpTimePicker", "$attrs", function($scope, $rootScope, $mdpTimePicker, $attrs) {
 
           if (!angular.isDate($scope.ngModel))
             throw "ng-model must be initialized as a date object";
@@ -233,7 +236,8 @@
             }).then(function(time) {
               $scope.ngModel.setHours(time.getHours());
               $scope.ngModel.setMinutes(time.getMinutes());
-              $scope.$broadcast('mdpTimeUpdated');
+              $scope.$broadcast('mdpTimePickerModalUpdated');
+              $rootScope.$emit('mdpTimePickerUpdated');
             });
 
           }
