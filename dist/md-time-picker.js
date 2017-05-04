@@ -111,6 +111,7 @@
           $scope.$on('$destroy', removeListener);
 
           function updateTime(next) {
+            if (!next) return;
             if ($scope.type === 'MM') {
               $scope.ngModel.setMinutes(next);
               return;
