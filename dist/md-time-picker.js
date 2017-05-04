@@ -139,7 +139,9 @@
           }
 
           $scope.handleInput = function(blur) {
-            $scope.time[$scope.type] = handleInput($scope.time[$scope.type], $scope.max, blur, $scope.type);
+            var next = handleInput($scope.time[$scope.type], $scope.max, blur, $scope.type);
+            $scope.time[$scope.type] = next;
+            updateTime(parseInt(next));
             $rootScope.$emit('mdpTimePickerUpdated');
           }
 
