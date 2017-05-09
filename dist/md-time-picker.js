@@ -57,7 +57,8 @@
         scope: {
           type: '@',
           message: '@',
-          ngModel: '='
+          ngModel: '=',
+          readOnly: '<' // true or false
         },
         template: '<md-input-container md-no-float>' +
           '<input required ' +
@@ -68,9 +69,9 @@
           'placeholder="{{type}}"' +
           'maxlength="2"' +
           'ng-blur="handleInput(true)"' +
-          'ng-keydown="handleKeypress($event)"/>' +
-          '<span class="md-up-arrow" aria-hidden="true" ng-click="increase()"></span>' +
-          '<span class="md-down-arrow" aria-hidden="true" ng-click="decrease()"></span>' +
+          'ng-keydown="handleKeypress($event)" ng-disabled="readOnly"/>' +
+          '<span class="md-up-arrow" aria-hidden="true" ng-click="!readOnly && increase()"></span>' +
+          '<span class="md-down-arrow" aria-hidden="true" ng-click="!readOnly && decrease()"></span>' +
           '<div class="time-error-messages" ng-messages="$parent.timeForm[\'time_\' + type].$error" role="alert">' +
           '<div ng-message="required">{{message}}</div>' +
           '</div>' +
@@ -92,7 +93,13 @@
 
           function setTime() {
             if ($scope.type === "HH") {
-              var hours = $scope.$parent.ngModel.getHours();
+              var hours = '';
+              try {
+                hours = $scope.$parent.ngModel.getHours();
+              } catch (e) {
+                // leave hours empty to allow empty values
+              }
+
               if (!$scope.$parent.noMeridiem) {
                 if (hours > 12)
                   hours -= 12;
@@ -101,7 +108,12 @@
               }
               $scope.time.HH = String(hours);
             } else
-              $scope.time.MM = format($scope.$parent.ngModel.getMinutes());
+              if ($scope.$parent.ngModel) {
+                $scope.time.MM = format($scope.$parent.ngModel.getMinutes());
+              } else {
+                // leave MM empty to allow empty values
+                $scope.time.MM = '';
+              }
           }
 
           $scope.time = {};
@@ -111,7 +123,13 @@
           $scope.$on('$destroy', removeListener);
 
           function updateTime(next) {
-            if (!next) return;
+            // if $scope.ngModel is undefined, create new date object. else leave as is, which means user has specified date object
+            // Set hours, minutes, seconds and milliseconds to 0 in order for the user to be able to set own values
+            if ($scope.ngModel) {
+              // continue;
+            } else {
+              $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
+            }
             if ($scope.type === 'MM') {
               $scope.ngModel.setMinutes(next);
               return;
@@ -162,7 +180,8 @@
 
         restrict: 'E',
         scope: {
-          message: '@'
+          message: '@',
+          readOnly: '<' // true or false
         },
         template: '<md-input-container md-no-float>' +
           '<md-select ' +
@@ -172,8 +191,8 @@
           'ng-change="updateTime()"' +
           'placeholder="AM/PM"' +
           'flex-gt-sm>' +
-          '<md-option value="AM">AM</md-option>' +
-          '<md-option value="PM">PM</md-option>' +
+          '<md-option value="AM" ng-disabled="readOnly">AM</md-option>' +
+          '<md-option value="PM" ng-disabled="readOnly">PM</md-option>' +
           '</md-select>' +
           '<div class="time-error-messages" ng-messages="$parent.timeForm.meridiem.$error" role="alert">' +
           '<div ng-message="required">{{message}}</div>' +
@@ -182,7 +201,12 @@
         controller: ["$scope", "$rootScope", function($scope, $rootScope) {
 
           function setMeridiem() {
-            var hours = $scope.$parent.$parent.ngModel.getHours();
+            var hours = '';
+            try {
+              hours = $scope.$parent.$parent.ngModel.getHours();
+            } catch (e) {
+              // leave hours empty
+            }
             $scope.meridiem = hours >= 0 && hours < 12 ? 'AM' : 'PM';
           }
 
@@ -211,24 +235,22 @@
         restrict: 'E',
         scope: {
           message: '<',
-          ngModel: '='
+          ngModel: '=',
+          readOnly: '<' // true or false
         },
         template: '<form name="timeForm">' +
-          '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="showPicker($event)">' +
+          '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="!readOnly && showPicker($event)">' +
           '<md-icon>' +
           '<i class="material-icons">&#xE192;</i>' +
           '</md-icon>' +
           '<div class="md-ripple-container"></div>' +
           '</button>' +
-          '<md-hours-minutes type="HH" ng-model="ngModel" message="{{message.hour}}"></md-hours-minutes>' +
+          '<md-hours-minutes type="HH" ng-model="ngModel" message="{{message.hour}}" read-only="readOnly"></md-hours-minutes>' +
           '<span class="time-colon">:</span>' +
-          '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}"></md-hours-minutes>' +
-          '<md-meridiem ng-if="!noMeridiem" message="{{message.meridiem}}"></md-meridiem>' +
+          '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}" read-only="readOnly"></md-hours-minutes>' +
+          '<md-meridiem ng-if="!noMeridiem" message="{{message.meridiem}}" read-only="readOnly"></md-meridiem>' +
           '</form>',
         controller: ["$scope", "$rootScope", "$mdpTimePicker", "$attrs", function($scope, $rootScope, $mdpTimePicker, $attrs) {
-
-          if (!angular.isDate($scope.ngModel))
-            throw "ng-model must be initialized as a date object";
 
           $scope.showPicker = function(ev) {
 
@@ -237,6 +259,13 @@
               noMeridiem: $scope.noMeridiem,
               autoSwitch: !$scope.noAutoSwitch
             }).then(function(time) {
+              // if $scope.ngModel is undefined, create new date object.
+              // Set hours, minutes, seconds and milliseconds to 0 in order for the user to be able to set own values
+              if ($scope.ngModel) {
+                // continue
+              } else {
+                $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
+              }
               $scope.ngModel.setHours(time.getHours());
               $scope.ngModel.setMinutes(time.getMinutes());
               $scope.$broadcast('mdpTimePickerModalUpdated');
@@ -277,6 +306,14 @@
           return $mdDialog.show({
             controller: ['$scope', '$mdDialog', '$mdMedia', function ($scope, $mdDialog, $mdMedia) {
               var self = this;
+
+              // if time is undefined, create new date object.
+              // Set hours, minutes, seconds and milliseconds to 0 in order for the user to be able to set own values
+              if (time) {
+                // continue
+              } else {
+                time = new Date(2017, 0, 0, 0, 0, 0, 0);
+              }
 
               this.time = new Date(time.getTime());
               this.noMeridiem = options.noMeridiem;
