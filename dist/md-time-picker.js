@@ -57,7 +57,8 @@
         scope: {
           type: '@',
           message: '@',
-          ngModel: '='
+          ngModel: '=',
+          readOnly: '<' // true or false
         },
         template: '<md-input-container md-no-float>' +
           '<input required ' +
@@ -68,9 +69,9 @@
           'placeholder="{{type}}"' +
           'maxlength="2"' +
           'ng-blur="handleInput(true)"' +
-          'ng-keydown="handleKeypress($event)"/>' +
-          '<span class="md-up-arrow" aria-hidden="true" ng-click="increase()"></span>' +
-          '<span class="md-down-arrow" aria-hidden="true" ng-click="decrease()"></span>' +
+          'ng-keydown="handleKeypress($event)" ng-disabled="readOnly"/>' +
+          '<span class="md-up-arrow" aria-hidden="true" ng-click="!readOnly && increase()"></span>' +
+          '<span class="md-down-arrow" aria-hidden="true" ng-click="!readOnly && decrease()"></span>' +
           '<div class="time-error-messages" ng-messages="$parent.timeForm[\'time_\' + type].$error" role="alert">' +
           '<div ng-message="required">{{message}}</div>' +
           '</div>' +
@@ -179,7 +180,8 @@
 
         restrict: 'E',
         scope: {
-          message: '@'
+          message: '@',
+          readOnly: '<' // true or false
         },
         template: '<md-input-container md-no-float>' +
           '<md-select ' +
@@ -189,8 +191,8 @@
           'ng-change="updateTime()"' +
           'placeholder="AM/PM"' +
           'flex-gt-sm>' +
-          '<md-option value="AM">AM</md-option>' +
-          '<md-option value="PM">PM</md-option>' +
+          '<md-option value="AM" ng-disabled="readOnly">AM</md-option>' +
+          '<md-option value="PM" ng-disabled="readOnly">PM</md-option>' +
           '</md-select>' +
           '<div class="time-error-messages" ng-messages="$parent.timeForm.meridiem.$error" role="alert">' +
           '<div ng-message="required">{{message}}</div>' +
@@ -233,19 +235,20 @@
         restrict: 'E',
         scope: {
           message: '<',
-          ngModel: '='
+          ngModel: '=',
+          readOnly: '<' // true or false
         },
         template: '<form name="timeForm">' +
-          '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="showPicker($event)">' +
+          '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="!readOnly && showPicker($event)">' +
           '<md-icon>' +
           '<i class="material-icons">&#xE192;</i>' +
           '</md-icon>' +
           '<div class="md-ripple-container"></div>' +
           '</button>' +
-          '<md-hours-minutes type="HH" ng-model="ngModel" message="{{message.hour}}"></md-hours-minutes>' +
+          '<md-hours-minutes type="HH" ng-model="ngModel" message="{{message.hour}}" read-only="readOnly"></md-hours-minutes>' +
           '<span class="time-colon">:</span>' +
-          '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}"></md-hours-minutes>' +
-          '<md-meridiem ng-if="!noMeridiem" message="{{message.meridiem}}"></md-meridiem>' +
+          '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}" read-only="readOnly"></md-hours-minutes>' +
+          '<md-meridiem ng-if="!noMeridiem" message="{{message.meridiem}}" read-only="readOnly"></md-meridiem>' +
           '</form>',
         controller: ["$scope", "$rootScope", "$mdpTimePicker", "$attrs", function($scope, $rootScope, $mdpTimePicker, $attrs) {
 
