@@ -37,8 +37,13 @@
 
   function handleInput(value, max, blur, type) {
     var num = parseInt(value);
-    if (type === 'HH' && num === 0) return;
-    if (num > max)
+    if (type === 'HH' && num === 0) {
+      if (num === 0) {
+        return String(num);
+      }
+      return;
+    }
+    if (num > max) 
       return String(num)[0];
     else if (!isNaN(num)) {
       if (value.length === 2 || (blur && type === 'MM'))
