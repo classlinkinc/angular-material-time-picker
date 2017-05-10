@@ -117,7 +117,11 @@
           }
 
           $scope.time = {};
-          setTime();
+
+          // make sure we update our variables if new values
+          $scope.$watch("ngModel", function() {
+            setTime();
+          });
 
           var removeListener = $scope.$on('mdpTimePickerModalUpdated', setTime);
           $scope.$on('$destroy', removeListener);
