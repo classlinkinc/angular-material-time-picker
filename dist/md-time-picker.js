@@ -128,16 +128,24 @@
           $scope.$on('$destroy', removeListener);
 
           function updateTime(next) {
+            // prevent NaN value in input field
+            if (isNaN(next))
+              return;
+
             // if $scope.ngModel is undefined, create new date object. else leave as is, which means user has specified date object
             // Set hours, minutes, seconds and milliseconds to 0 in order for the user to be able to set own values
-            if ($scope.ngModel) {
-              // continue;
+            if (angular.isDate($scope.ngModel)) {
+              if (isNaN($scope.ngModel.getTime())) {
+                $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
+              } else {
+                // continue
+              }
             } else {
               $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
             }
             if ($scope.type === 'MM') {
-              $scope.ngModel.setMinutes(next);
-              return;
+                $scope.ngModel.setMinutes(next);
+                return;
             } else if (!$scope.$parent.noMeridiem) {
               var hours = $scope.ngModel.getHours();
               if (hours >= 12 && next != 12)
@@ -145,7 +153,7 @@
               else if (hours < 12 && next == 12)
                 next = 0;
             }
-            $scope.ngModel.setHours(next);
+              $scope.ngModel.setHours(next);
           }
 
           $scope.increase = function() {
