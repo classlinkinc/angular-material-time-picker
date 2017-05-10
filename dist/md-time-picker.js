@@ -264,10 +264,12 @@
               noMeridiem: $scope.noMeridiem,
               autoSwitch: !$scope.noAutoSwitch
             }).then(function(time) {
-              // if $scope.ngModel is undefined, create new date object.
+              // if $scope.ngModel is not a valid date, create new date object.
               // Set hours, minutes, seconds and milliseconds to 0 in order for the user to be able to set own values
-              if ($scope.ngModel) {
-                // continue
+              if (angular.isDate($scope.ngModel)) {
+                if (isNaN($scope.ngModel.getTime())) {
+                  $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
+                }
               } else {
                 $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
               }
@@ -312,10 +314,13 @@
             controller: ['$scope', '$mdDialog', '$mdMedia', function ($scope, $mdDialog, $mdMedia) {
               var self = this;
 
-              // if time is undefined, create new date object.
-              // Set hours, minutes, seconds and milliseconds to 0 in order for the user to be able to set own values
-              if (time) {
-                // continue
+              // check if time is valid date. Create new date object if not.
+              if (angular.isDate(time)) {
+                if (isNaN(time.getTime())) {
+                  time = new Date(2017, 0, 0, 0, 0, 0, 0);
+                } else {
+                  // continue
+                }
               } else {
                 time = new Date(2017, 0, 0, 0, 0, 0, 0);
               }
