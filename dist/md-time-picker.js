@@ -194,7 +194,8 @@
         restrict: 'E',
         scope: {
           message: '@',
-          readOnly: '<' // true or false
+          readOnly: '<', // true or false
+          ngModel: '='
         },
         template: '<md-input-container md-no-float>' +
           '<md-select ' +
@@ -223,7 +224,10 @@
             $scope.meridiem = hours >= 0 && hours < 12 ? 'AM' : 'PM';
           }
 
-          setMeridiem();
+          // update meridiem on load of view and when model is changing
+          $scope.$watch("ngModel", function() {
+            setMeridiem();
+          });
 
           $scope.updateTime = function() {
             var hours = $scope.$parent.$parent.ngModel.getHours();
@@ -261,7 +265,7 @@
           '<md-hours-minutes type="HH" ng-model="ngModel" message="{{message.hour}}" read-only="readOnly"></md-hours-minutes>' +
           '<span class="time-colon">:</span>' +
           '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}" read-only="readOnly"></md-hours-minutes>' +
-          '<md-meridiem ng-if="!noMeridiem" message="{{message.meridiem}}" read-only="readOnly"></md-meridiem>' +
+          '<md-meridiem ng-if="!noMeridiem" ng-model="ngModel" message="{{message.meridiem}}" read-only="readOnly"></md-meridiem>' +
           '</form>',
         controller: ["$scope", "$rootScope", "$mdpTimePicker", "$attrs", function($scope, $rootScope, $mdpTimePicker, $attrs) {
 
