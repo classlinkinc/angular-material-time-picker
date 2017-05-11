@@ -401,7 +401,8 @@
               noMeridiem: options.noMeridiem,
               autoSwitch: options.autoSwitch
             },
-            skipHide: true
+            skipHide: true,
+            multiple: true
           });
         };
 
