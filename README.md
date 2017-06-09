@@ -82,18 +82,24 @@ angular.module('demoApp')
       meridiem: 'Meridiem is required'
     }
 
+    $scope.readonly = false;
+
+    $scope.required = true;
+
 }]);
 ```
 
 **Example Template**
 
 ```html
-<md-time-picker ng-model="time" message="message" no-meridiem no-auto-switch></md-time-picker>
+<md-time-picker ng-model="time" message="message" read-only="readonly" mandatory="required" no-meridiem no-auto-switch></md-time-picker>
 ```
 **Optional Attributes**
 * **message** (takes an object with keys: hour, minute, and meridiem)
 * **no-meridiem** (changes time picker to 24 hour time, 12 hour time is default)
 * **no-auto-switch** (stops modal from switching to minutes automatically after an hour is pressed)
+* **read-only** (set read only on input. Accepts true or false)
+* **mandatory** (input will be validated as required if true. Accepts true or false).
 
 ## License
 

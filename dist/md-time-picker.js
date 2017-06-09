@@ -63,10 +63,12 @@
           type: '@',
           message: '@',
           ngModel: '=',
-          readOnly: '<' // true or false
+          readOnly: '<', // true or false
+          mandatory: '<' // true or false
         },
         template: '<md-input-container md-no-float>' +
-          '<input required ' +
+          '<input ' +
+          'ng-required="mandatory" ' +
           'type="text"' +
           'name="time_{{type}}"' +
           'ng-model="time[type]"' +
@@ -199,11 +201,12 @@
         scope: {
           message: '@',
           readOnly: '<', // true or false
-          ngModel: '='
+          ngModel: '=',
+          mandatory: '<' // true or false
         },
         template: '<md-input-container md-no-float>' +
           '<md-select ' +
-          'required ' +
+          'ng-required="mandatory" ' +
           'name="meridiem"' +
           'ng-model="meridiem"' +
           'ng-change="updateTime()"' +
@@ -257,7 +260,8 @@
         scope: {
           message: '<',
           ngModel: '=',
-          readOnly: '<' // true or false
+          readOnly: '<', // true or false
+          mandatory: '<' // true or false
         },
         template: '<form name="timeForm">' +
           '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="!readOnly && showPicker($event)">' +
@@ -266,10 +270,10 @@
           '</md-icon>' +
           '<div class="md-ripple-container"></div>' +
           '</button>' +
-          '<md-hours-minutes type="HH" ng-model="ngModel" message="{{message.hour}}" read-only="readOnly"></md-hours-minutes>' +
+          '<md-hours-minutes type="HH" ng-model="ngModel" message="{{message.hour}}" read-only="readOnly" mandatory="mandatory"></md-hours-minutes>' +
           '<span class="time-colon">:</span>' +
-          '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}" read-only="readOnly"></md-hours-minutes>' +
-          '<md-meridiem ng-if="!noMeridiem" ng-model="ngModel" message="{{message.meridiem}}" read-only="readOnly"></md-meridiem>' +
+          '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}" read-only="readOnly" mandatory="mandatory"></md-hours-minutes>' +
+          '<md-meridiem ng-if="!noMeridiem" ng-model="ngModel" message="{{message.meridiem}}" read-only="readOnly" mandatory="mandatory"></md-meridiem>' +
           '</form>',
         controller: ["$scope", "$rootScope", "$mdpTimePicker", "$attrs", function($scope, $rootScope, $mdpTimePicker, $attrs) {
 
