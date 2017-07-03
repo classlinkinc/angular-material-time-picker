@@ -539,7 +539,7 @@
 
           };
 
-          this.init = function() {
+          this.$onInit = function() {
 
             self.type = self.type || "hours";
 
@@ -569,8 +569,11 @@
                 break;
             }
           };
-
-          this.init();
+           // Prior to v1.5, we need to call `$onInit()` manually.
+           // (Bindings will always be pre-assigned in these versions.)
+          if (angular.version.major === 1 && angular.version.minor < 6) {
+            this.$onInit();
+          }
         }],
         controllerAs: "clock",
         link: function(scope, element, attrs, ctrl) {
