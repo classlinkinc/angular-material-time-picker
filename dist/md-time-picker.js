@@ -263,7 +263,7 @@
           readOnly: '<', // true or false
           mandatory: '<' // true or false
         },
-        template: '<form name="timeForm">' +
+        template: '<ng-form name="timeForm">' +
           '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="!readOnly && showPicker($event)">' +
           '<md-icon>' +
           '<i class="material-icons">&#xE192;</i>' +
@@ -274,7 +274,7 @@
           '<span class="time-colon">:</span>' +
           '<md-hours-minutes type="MM" ng-model="ngModel" message="{{message.minute}}" read-only="readOnly" mandatory="mandatory"></md-hours-minutes>' +
           '<md-meridiem ng-if="!noMeridiem" ng-model="ngModel" message="{{message.meridiem}}" read-only="readOnly" mandatory="mandatory"></md-meridiem>' +
-          '</form>',
+          '</ng-form>',
         controller: ["$scope", "$rootScope", "$mdpTimePicker", "$attrs", function($scope, $rootScope, $mdpTimePicker, $attrs) {
 
           $scope.showPicker = function(ev) {

@@ -1,19 +1,20 @@
-form[name=timeForm] {
+ng-form[name=timeForm] {
+  display: block;
   position: relative;
   vertical-align: middle;
 }
-form[name=timeForm]>* {
+ng-form[name=timeForm]>* {
   display: inline-block;
 }
-form[name=timeForm] input,
-form[name=timeForm] md-input-container {
+ng-form[name=timeForm] input,
+ng-form[name=timeForm] md-input-container {
   text-align: center;
   padding: 0;
 }
-form[name=timeForm] md-input-container .md-errors-spacer {
+ng-form[name=timeForm] md-input-container .md-errors-spacer {
   min-height: 0;
 }
-form[name=timeForm] div.time-error-messages {
+ng-form[name=timeForm] div.time-error-messages {
   position: absolute;
   top: 30px;
 }
