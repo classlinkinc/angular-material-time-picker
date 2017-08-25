@@ -69,7 +69,7 @@
         template: '<md-input-container md-no-float>' +
           '<input ' +
           'ng-required="mandatory" ' +
-          'type="text"' +
+          'type="number"' +
           'name="time_{{type}}"' +
           'ng-model="time[type]"' +
           'ng-change="handleInput()"' +
