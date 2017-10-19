@@ -211,7 +211,8 @@
           'ng-model="meridiem"' +
           'ng-change="updateTime()"' +
           'placeholder="AM/PM"' +
-          'flex-gt-sm>' +
+          'flex-gt-sm ' +
+          'ng-disabled="readOnly">' +
           '<md-option value="AM" ng-disabled="readOnly">AM</md-option>' +
           '<md-option value="PM" ng-disabled="readOnly">PM</md-option>' +
           '</md-select>' +
