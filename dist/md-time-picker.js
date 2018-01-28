@@ -211,7 +211,8 @@
           'ng-model="meridiem"' +
           'ng-change="updateTime()"' +
           'placeholder="AM/PM"' +
-          'flex-gt-sm>' +
+          'flex-gt-sm ' +
+          'ng-disabled="readOnly">' +
           '<md-option value="AM" ng-disabled="readOnly">AM</md-option>' +
           '<md-option value="PM" ng-disabled="readOnly">PM</md-option>' +
           '</md-select>' +
@@ -264,7 +265,7 @@
           mandatory: '<' // true or false
         },
         template: '<ng-form name="timeForm">' +
-          '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="!readOnly && showPicker($event)">' +
+          '<button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="!readOnly && showPicker($event)" ng-disabled="readOnly">' +
           '<md-icon>' +
           '<i class="material-icons">&#xE192;</i>' +
           '</md-icon>' +
