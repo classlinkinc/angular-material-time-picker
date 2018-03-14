@@ -1,6 +1,6 @@
 {
   "name": "angular-material-time-picker",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Material design time picker for 12 hour and 24 hour time",
   "main": "index.js",
   "repository": {
