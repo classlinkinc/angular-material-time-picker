@@ -149,6 +149,11 @@
             } else {
               $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
             }
+            // Set the form to a dirty state
+            var form = $scope.$parent.timeForm;
+            if (form.$pristine) {
+                form.$setDirty();
+            }
             if ($scope.type === 'MM') {
                 $scope.ngModel.setMinutes(next);
                 return;
@@ -293,6 +298,11 @@
                 }
               } else {
                 $scope.ngModel = new Date(2017, 0, 0, 0, 0, 0, 0);
+              }
+              // Set the form to a dirty state
+              var form = $scope.timeForm;
+              if (form.$pristine) {
+                form.$setDirty();
               }
               $scope.ngModel.setHours(time.getHours());
               $scope.ngModel.setMinutes(time.getMinutes());
