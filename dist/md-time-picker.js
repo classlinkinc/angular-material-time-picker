@@ -70,6 +70,7 @@
           '<input ' +
           'ng-required="mandatory" ' +
           'type="text"' +
+          'autocomplete="off"' +
           'name="time_{{type}}"' +
           'ng-model="time[type]"' +
           'ng-change="handleInput()"' +
