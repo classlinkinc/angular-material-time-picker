@@ -1,5 +1,9 @@
 [![npm version](https://badge.fury.io/js/angular-material-time-picker.svg)](https://badge.fury.io/js/angular-material-time-picker)
 
+# Looking for maintainers
+There are people still using angular-material-time-picker in their projects and we have a few issues open + pull requests.
+This projects is open to new lead maintainers. Please contact the current maintainer.
+
 # Angular Material Time Picker (md-time-picker)
 
 Angular Material has a date picker, but no time picker.  This module is an effort to implement a time picker in [Angular Material](https://material.angularjs.org/latest/).  
