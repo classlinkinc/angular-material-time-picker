@@ -29,14 +29,14 @@
 
       <md-card flex layout="column" layout-align="center center">
         <span class="md-headline">12 Hour Time</span>
-        <md-time-picker ng-model="time.twelve" message="message"></md-time-picker>
+        <md-time-picker ng-model="time.twelve" message="message" ng-change="timeChanged()"></md-time-picker>
         {{'Hours: ' + time.twelve.getHours()}}<br>
         {{'Minutes: ' + time.twelve.getMinutes()}}
       </md-card>
 
       <md-card flex layout="column" layout-align="center center">
         <span class="md-headline">24 Hour Time</span>
-        <md-time-picker ng-model="time.twentyfour" message="message" no-meridiem no-auto-switch></md-time-picker>
+        <md-time-picker ng-model="time.twentyfour" ng-change="timeChanged()" message="message" no-meridiem no-auto-switch></md-time-picker>
         {{'Hours: ' + time.twentyfour.getHours()}}<br>
         {{'Minutes: ' + time.twentyfour.getMinutes()}}
       </md-card>
